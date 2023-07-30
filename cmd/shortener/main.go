@@ -49,7 +49,11 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
 	shortenedURL := fmt.Sprintf("http://localhost:8080/%s", id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
-	fmt.Fprintf(w, shortenedURL)
+	n, err := fmt.Fprintf(w, shortenedURL)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("%d bytes written.\n", n)
 }
 
 // Простая функция для генерации уникального идентификатора
