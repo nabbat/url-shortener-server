@@ -48,13 +48,12 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
 	// Отправляем ответ с сокращённым URL
 	shortenedURL := fmt.Sprintf("http://localhost:8080/%s", id)
 	w.Header().Set("Content-Type", "text/plain")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	fmt.Fprintf(w, shortenedURL)
 }
 
 // Простая функция для генерации уникального идентификатора
 func generateID(fullUrl string) string {
-	fmt.Println(fullUrl)
 	encodedStr := base64.URLEncoding.EncodeToString([]byte(fullUrl))
 	// Возвращаем первые 6 символов закодированной строки
 	if len(encodedStr) > 6 {
