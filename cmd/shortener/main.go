@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -49,11 +50,9 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
 	shortenedURL := fmt.Sprintf("http://localhost:8080/%s", id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
-	n, err := fmt.Fprintf(w, shortenedURL)
-	if err != nil {
-		panic(err)
+	if _, err := io.WriteString(w, shortenedURL); err != nil {
+		log.Fatal(err)
 	}
-	fmt.Printf("%d bytes written.\n", n)
 }
 
 // Простая функция для генерации уникального идентификатора
