@@ -79,7 +79,7 @@ func Test_shortenURLHandler(t *testing.T) {
 			assert.Equal(t, res.StatusCode, test.want.code)
 			// получаем и проверяем тело запроса
 			defer func(Body io.ReadCloser) {
-				err := Body.Close()
+				err := res.Body.Close()
 				if err != nil {
 					panic(err)
 				}
