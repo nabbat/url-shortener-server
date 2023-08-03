@@ -10,6 +10,7 @@ import (
 )
 
 // Словарь для хранения соответствий между сокращёнными и оригинальными URL
+// TODO Создать хранилище
 var urlMap = map[string]string{}
 
 // Перенаправляем по полной ссылке
@@ -24,7 +25,6 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[1:]
 
 	// Получаем оригинальный URL из словаря
-	// TODO Создать хранилище
 
 	if originalURL, found := urlMap[id]; found {
 		// Устанавливаем заголовок Location и возвращаем ответ с кодом 307
@@ -78,9 +78,6 @@ func generateID(fullURL string) string {
 }
 
 func main() {
-
-	//mux := http.NewServeMux()
-
 	r := mux.NewRouter()
 	r.HandleFunc("/{idShortenURL}", redirectHandler).Methods("GET")
 	r.HandleFunc("/", shortenURLHandler).Methods("POST")
