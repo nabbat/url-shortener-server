@@ -73,7 +73,6 @@ func Test_shortenURLHandler(t *testing.T) {
 			// создаём новый Recorder
 			w := httptest.NewRecorder()
 			shortenURLHandler(w, request)
-
 			res := w.Result()
 			// проверяем код ответа
 			assert.Equal(t, res.StatusCode, test.want.code)
@@ -122,7 +121,7 @@ func Test_redirectHandler(t *testing.T) {
 			assert.Equal(t, res.StatusCode, test.want.code)
 			// получаем и проверяем тело запроса
 			defer func(Body io.ReadCloser) {
-				err := Body.Close()
+				err := res.Body.Close()
 				if err != nil {
 					panic(err)
 				}
