@@ -36,23 +36,39 @@ func Test_shortenURLHandler(t *testing.T) {
 	}
 
 	tests := []struct {
-		name string
-		want want
+		name                string
+		bodyURL             string
+		responseContentType string
+		targetURL           string
+		want                want
 	}{
-		{name: "Проверяем POST shortenURLHandler",
+		{name: "positive POST shortenURLHandler",
+			bodyURL:             "https://practicum.yandex.ru/",
+			responseContentType: "text/plain",
+			targetURL:           "/",
 			want: want{
 				code:        201,
 				response:    `http://localhost:8080/aHR0cH`,
 				contentType: "text/plain",
 			},
 		},
+		{name: "negative POST shortenURLHandler",
+			bodyURL:             "https://practicum.yandex.ru/",
+			responseContentType: "application/json",
+			targetURL:           "/",
+			want: want{
+				code:        400,
+				response:    "invalid request type\n",
+				contentType: "text/plain; charset=utf-8",
+			},
+		},
 	}
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			bodyURLTesting := strings.NewReader("https://practicum.yandex.ru/")
-			request := httptest.NewRequest(http.MethodPost, "/", bodyURLTesting)
-			request.Header.Add("Content-Type", "text/plain")
+			bodyURLTesting := strings.NewReader(test.bodyURL)
+			request := httptest.NewRequest(http.MethodPost, test.targetURL, bodyURLTesting)
+			request.Header.Add("Content-Type", test.responseContentType)
 			// создаём новый Recorder
 			w := httptest.NewRecorder()
 			shortenURLHandler(w, request)

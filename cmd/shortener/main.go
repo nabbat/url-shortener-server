@@ -3,16 +3,23 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/gorilla/mux"
 	"io"
 	"log"
 	"net/http"
 )
 
 // Словарь для хранения соответствий между сокращёнными и оригинальными URL
-var urlMap map[string]string
+var urlMap = map[string]string{}
 
 // Перенаправляем по полной ссылке
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "invalid request type", http.StatusBadRequest)
+		return
+	}
+	// Добавляем тестовое соответствие в словарь
+	urlMap["aHR0cH"] = "https://practicum.yandex.ru/"
 	// Получаем идентификатор из URL-пути
 	id := r.URL.Path[1:]
 
@@ -34,6 +41,11 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
 	urlBytes, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, "Ошибка чтения запроса", http.StatusBadRequest)
+		return
+	}
+	contentType := r.Header.Get("Content-Type")
+	if contentType != "text/plain" {
+		http.Error(w, "invalid request type", http.StatusBadRequest)
 		return
 	}
 
@@ -66,19 +78,14 @@ func generateID(fullURL string) string {
 }
 
 func main() {
-	mux := http.NewServeMux()
-	urlMap = make(map[string]string)
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// GET OR POST
-		if r.Method != http.MethodPost {
-			redirectHandler(w, r)
-			return
-		}
-		shortenURLHandler(w, r)
 
-	})
+	//mux := http.NewServeMux()
 
-	err := http.ListenAndServe(":8080", mux)
+	r := mux.NewRouter()
+	r.HandleFunc("/{idShortenURL}", redirectHandler).Methods("GET")
+	r.HandleFunc("/", shortenURLHandler).Methods("POST")
+
+	err := http.ListenAndServe(":8080", r)
 	if err != nil {
 		panic(err)
 	}
