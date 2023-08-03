@@ -43,12 +43,14 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Ошибка чтения запроса", http.StatusBadRequest)
 		return
 	}
-	contentType := r.Header.Get("Content-Type")
-	if contentType != "text/plain" {
-		http.Error(w, "invalid request type", http.StatusBadRequest)
-		return
-	}
+	/*
+		contentType := r.Header.Get("Content-Type")
 
+		if contentType != "text/plain" || contentType != "text/plain; charset=utf-8" {
+			http.Error(w, "invalid request type", http.StatusBadRequest)
+			return
+		}
+	*/
 	// Преобразуем в строку
 	url := string(urlBytes)
 
