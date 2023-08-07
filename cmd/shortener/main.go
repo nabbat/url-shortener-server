@@ -99,8 +99,8 @@ func main() {
 	// Run first server
 	r := mux.NewRouter()
 	r.HandleFunc("/{idShortenURL}", redirectHandler).Methods("GET")
-	fmt.Println("Running server method GET on", config.FlagResultUrl) //GET method
-	err := http.ListenAndServe(config.FlagResultUrl, r)
+	fmt.Println("Running server method GET on", config.FlagResultURL) //GET method
+	err := http.ListenAndServe(config.FlagResultURL, r)
 	if err != nil {
 		panic(err)
 	}
