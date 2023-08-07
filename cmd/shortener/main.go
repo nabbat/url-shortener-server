@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/nabbat/url-shortener-server.git/cmd/config"
 	"io"
 	"log"
 	"net/http"
@@ -80,11 +81,26 @@ func generateID(fullURL string) string {
 }
 
 func main() {
+
+	// обрабатываем аргументы командной строки
+	config.ParseFlags()
+
+	// Run second server
+	go func() {
+		r := mux.NewRouter()
+		r.HandleFunc("/", shortenURLHandler).Methods("POST")
+		fmt.Println("Running server method POST on", config.FlagRunAddr) // POST method
+		err := http.ListenAndServe(config.FlagRunAddr, r)
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	// Run first server
 	r := mux.NewRouter()
 	r.HandleFunc("/{idShortenURL}", redirectHandler).Methods("GET")
-	r.HandleFunc("/", shortenURLHandler).Methods("POST")
-
-	err := http.ListenAndServe(":8080", r)
+	fmt.Println("Running server method GET on", config.FlagResultUrl) //GET method
+	err := http.ListenAndServe(config.FlagResultUrl, r)
 	if err != nil {
 		panic(err)
 	}
