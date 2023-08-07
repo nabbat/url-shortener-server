@@ -11,8 +11,8 @@ var FlagResultURL string
 // parseFlags обрабатывает аргументы командной строки
 // и сохраняет их значения в соответствующих переменных
 func ParseFlags() {
-	flag.StringVar(&FlagRunAddr, "a", ":8080", "Адрес запуска HTTP-сервера. По умолчанию localhost:8080")
-	flag.StringVar(&FlagResultURL, "b", ":8081", "Адрес результирующего сокращённого URL. По умолчанию http://localhost:8081/{короткая ссылка}")
+	flag.StringVar(&FlagRunAddr, "a", ":8081", "Адрес запуска HTTP-сервера. По умолчанию localhost:8080")
+	flag.StringVar(&FlagResultURL, "b", ":8080", "Адрес результирующего сокращённого URL. По умолчанию http://localhost:8081/{короткая ссылка}")
 	// парсим переданные серверу аргументы в зарегистрированные переменные
 	flag.Parse()
 }
