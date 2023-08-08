@@ -15,7 +15,7 @@ type Config struct {
 func ParseFlags(cfg *Config) {
 	//fs := flag.NewFlagSet("myflags", flag.ExitOnError)
 	flag.StringVarP(&cfg.RunAddr, "a", "a", "localhost:8080", "Адрес запуска HTTP-сервера.")
-	flag.StringVarP(&cfg.ResultURL, "b", "b", "http://localhost:8080/", "Адрес результирующего сокращённого URL.")
+	flag.StringVarP(&cfg.ResultURL, "b", "b", "http://localhost:8080", "Адрес результирующего сокращённого URL.")
 	// парсим переданные серверу аргументы в зарегистрированные переменные
 	flag.Parse()
 }
