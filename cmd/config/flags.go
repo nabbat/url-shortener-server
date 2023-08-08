@@ -13,8 +13,9 @@ type Config struct {
 // parseFlags обрабатывает аргументы командной строки
 // и сохраняет их значения в соответствующих переменных
 func ParseFlags(cfg *Config) {
-	flag.StringVar(&cfg.RunAddr, "a", "localhost:8080", "Адрес запуска HTTP-сервера. По умолчанию localhost:8080")
-	flag.StringVar(&cfg.ResultURL, "b", "http://localhost:8080/", "Адрес результирующего сокращённого URL. По умолчанию http://localhost:8080/{короткая ссылка}")
+	//fs := flag.NewFlagSet("myflags", flag.ExitOnError)
+	flag.StringVarP(&cfg.RunAddr, "a", "a", "localhost:8080", "Адрес запуска HTTP-сервера.")
+	flag.StringVarP(&cfg.ResultURL, "b", "b", "http://localhost:8080/", "Адрес результирующего сокращённого URL.")
 	// парсим переданные серверу аргументы в зарегистрированные переменные
 	flag.Parse()
 }
