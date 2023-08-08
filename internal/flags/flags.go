@@ -16,7 +16,7 @@ func ParseFlags() *Flags {
 	// Create a Config instance
 	flg := &Flags{}
 	flag.StringVarP(&flg.RunAddr, "a", "a", "localhost:8080", "Адрес запуска HTTP-сервера.")
-	flag.StringVarP(&flg.ResultURL, "b", "b", "http://localhost:8080", "Адрес результирующего сокращённого URL.")
+	flag.StringVarP(&flg.ResultURL, "b", "b", "localhost:8080", "Адрес результирующего сокращённого URL.")
 	// парсим переданные серверу аргументы в зарегистрированные переменные
 	flag.Parse()
 	return flg
