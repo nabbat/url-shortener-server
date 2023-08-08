@@ -37,7 +37,7 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func shortenURLHandler(w http.ResponseWriter, r *http.Request, cfg *config.Config) {
+func shortenURLHandler(w http.ResponseWriter, r *http.Request, c *config.Config) {
 	// Читаем тело запроса (URL)
 	urlBytes, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -55,7 +55,7 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request, cfg *config.Confi
 	urlMap[id] = url
 
 	// Отправляем ответ с сокращённым URL
-	shortenedURL := fmt.Sprintf("%s/%s", cfg.ResultURL, id)
+	shortenedURL := fmt.Sprintf("%s/%s", c.ResultURL, id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
 	if _, err := io.WriteString(w, shortenedURL); err != nil {
