@@ -55,7 +55,7 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request, c *config.Config)
 	urlMap[id] = url
 
 	// Отправляем ответ с сокращённым URL
-	shortenedURL := fmt.Sprintf("http://%s/%s", c.ResultURL, id)
+	shortenedURL := fmt.Sprintf("%s/%s", c.ResultURL, id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
 	if _, err := io.WriteString(w, shortenedURL); err != nil {
