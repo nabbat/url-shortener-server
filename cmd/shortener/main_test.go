@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/nabbat/url-shortener-server.git/cmd/config"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"io"
@@ -72,7 +73,10 @@ func Test_shortenURLHandler(t *testing.T) {
 			request.Header.Add("Content-Type", test.responseContentType)
 			// создаём новый Recorder
 			w := httptest.NewRecorder()
-			shortenURLHandler(w, request)
+			cfg := &config.Config{}
+			// Parse command line flags and populate the Config instance
+			config.ParseFlags(cfg)
+			shortenURLHandler(w, request, cfg)
 			res := w.Result()
 			// проверяем код ответа
 			assert.Equal(t, res.StatusCode, test.want.code)
