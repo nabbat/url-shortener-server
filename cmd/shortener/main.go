@@ -74,20 +74,16 @@ func generateID(fullURL string) string {
 }
 
 func main() {
-	// Create a Config instance
-	cfg := &config.Config{}
-
-	// Parse command line flags and populate the Config instance
-	config.ParseFlags(cfg)
+	c := config.SetEnv()
 
 	// Run server
 	r := mux.NewRouter()
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		shortenURLHandler(w, r, cfg)
+		shortenURLHandler(w, r, c)
 	}).Methods("POST")
 	r.HandleFunc("/{idShortenURL}", redirectHandler).Methods("GET")
-	fmt.Println("Running server on", cfg.RunAddr)
-	err := http.ListenAndServe(cfg.RunAddr, r)
+	fmt.Println("Running server on", c.RunAddr)
+	err := http.ListenAndServe(c.RunAddr, r)
 	if err != nil {
 		panic(err)
 	}
