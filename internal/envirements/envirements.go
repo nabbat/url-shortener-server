@@ -9,8 +9,8 @@ type EnvConfig struct {
 
 // ParseEnv Get system environments
 func ParseEnv() *EnvConfig {
-	env := &EnvConfig{}
-	env.EnvRunAddr = os.Getenv("RUN_ADDR")
-	env.EnvResultURL = os.Getenv("SERVER_ADDRESS")
-	return env
+	en := &EnvConfig{}
+	en.EnvRunAddr = os.Getenv("RUN_ADDR")
+	en.EnvResultURL = os.Getenv("SERVER_ADDRESS")
+	return en
 }
