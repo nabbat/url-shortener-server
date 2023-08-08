@@ -4,15 +4,17 @@ import (
 	flag "github.com/spf13/pflag"
 )
 
-// неэкспортированная переменная flagRunAddr содержит адрес и порт для запуска сервера
-var FlagRunAddr string
-var FlagResultURL string
+// Config структура для хранения настроек
+type Config struct {
+	RunAddr   string
+	ResultURL string
+}
 
 // parseFlags обрабатывает аргументы командной строки
 // и сохраняет их значения в соответствующих переменных
-func ParseFlags() {
-	flag.StringVar(&FlagRunAddr, "a", ":8081", "Адрес запуска HTTP-сервера. По умолчанию localhost:8080")
-	flag.StringVar(&FlagResultURL, "b", ":8080", "Адрес результирующего сокращённого URL. По умолчанию http://localhost:8081/{короткая ссылка}")
+func ParseFlags(cfg *Config) {
+	flag.StringVar(&cfg.RunAddr, "a", "localhost:8080", "Адрес запуска HTTP-сервера. По умолчанию localhost:8080")
+	flag.StringVar(&cfg.ResultURL, "b", "http://localhost:8080/", "Адрес результирующего сокращённого URL. По умолчанию http://localhost:8080/{короткая ссылка}")
 	// парсим переданные серверу аргументы в зарегистрированные переменные
 	flag.Parse()
 }

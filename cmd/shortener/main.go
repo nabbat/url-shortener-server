@@ -37,7 +37,7 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
+func shortenURLHandler(w http.ResponseWriter, r *http.Request, cfg *config.Config) {
 	// Читаем тело запроса (URL)
 	urlBytes, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -62,7 +62,7 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
 	urlMap[id] = url
 
 	// Отправляем ответ с сокращённым URL
-	shortenedURL := fmt.Sprintf("%s%s", config.FlagResultURL, id)
+	shortenedURL := fmt.Sprintf("%s%s", cfg.ResultURL, id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
 	if _, err := io.WriteString(w, shortenedURL); err != nil {
@@ -81,16 +81,20 @@ func generateID(fullURL string) string {
 }
 
 func main() {
+	// Create a Config instance
+	cfg := &config.Config{}
 
-	// Get arguments from command line
-	config.ParseFlags()
+	// Parse command line flags and populate the Config instance
+	config.ParseFlags(cfg)
 
 	// Run server
 	r := mux.NewRouter()
-	r.HandleFunc("/", shortenURLHandler).Methods("POST")
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		shortenURLHandler(w, r, cfg)
+	}).Methods("POST")
 	r.HandleFunc("/{idShortenURL}", redirectHandler).Methods("GET")
-	fmt.Println("Running server on", config.FlagRunAddr)
-	err := http.ListenAndServe(config.FlagRunAddr, r)
+	fmt.Println("Running server on", cfg.RunAddr)
+	err := http.ListenAndServe(cfg.RunAddr, r)
 	if err != nil {
 		panic(err)
 	}
