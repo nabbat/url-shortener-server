@@ -62,7 +62,7 @@ func shortenURLHandler(w http.ResponseWriter, r *http.Request) {
 	urlMap[id] = url
 
 	// Отправляем ответ с сокращённым URL
-	shortenedURL := fmt.Sprintf("http://localhost:8080/%s", id)
+	shortenedURL := fmt.Sprintf("%s/%s\n", config.FlagResultURL, id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
 	if _, err := io.WriteString(w, shortenedURL); err != nil {
@@ -82,25 +82,15 @@ func generateID(fullURL string) string {
 
 func main() {
 
-	// обрабатываем аргументы командной строки
+	// Get arguments from command line
 	config.ParseFlags()
 
-	// Run second server
-	go func() {
-		r := mux.NewRouter()
-		r.HandleFunc("/", shortenURLHandler).Methods("POST")
-		fmt.Println("Running server method POST on", config.FlagRunAddr) // POST method
-		err := http.ListenAndServe(config.FlagRunAddr, r)
-		if err != nil {
-			panic(err)
-		}
-	}()
-
-	// Run first server
+	// Run server
 	r := mux.NewRouter()
+	r.HandleFunc("/", shortenURLHandler).Methods("POST")
 	r.HandleFunc("/{idShortenURL}", redirectHandler).Methods("GET")
-	fmt.Println("Running server method GET on", config.FlagResultURL) //GET method
-	err := http.ListenAndServe(config.FlagResultURL, r)
+	fmt.Println("Running server on", config.FlagRunAddr)
+	err := http.ListenAndServe(config.FlagRunAddr, r)
 	if err != nil {
 		panic(err)
 	}
