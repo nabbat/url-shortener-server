@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/nabbat/url-shortener-server.git/internal/envirements"
 	"github.com/nabbat/url-shortener-server.git/internal/flags"
-	"strings"
 )
 
 // Config структура для хранения настроек
@@ -13,9 +12,9 @@ type Config struct {
 }
 
 func SetEnv() *Config {
-	c := &Config{}
 	fl := flags.ParseFlags()
 	en := envirements.ParseEnv()
+	c := &Config{}
 
 	if en.EnvRunAddr != "" {
 		c.RunAddr = en.EnvRunAddr
@@ -27,9 +26,6 @@ func SetEnv() *Config {
 		c.ResultURL = en.EnvResultURL
 	} else {
 		c.ResultURL = fl.ResultURL
-	}
-	if !strings.HasPrefix(c.ResultURL, "http://") {
-		c.ResultURL = "http://" + c.ResultURL
 	}
 
 	return c
